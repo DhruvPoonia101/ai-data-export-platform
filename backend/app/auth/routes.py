@@ -56,16 +56,18 @@ def register_user(
     )
 
     created_user = create_user(
-        db,
-        user.email,
-        password_hash
-    )
+    db,
+    user.name,
+    user.email,
+    password_hash
+)
 
     return {
-        "message": "User registered successfully",
-        "user_id": created_user.id,
-        "email": created_user.email
-    }
+    "message": "User registered successfully",
+    "user_id": created_user.id,
+    "name": created_user.name,
+    "email": created_user.email
+}
 
 @router.post("/login")
 def login_user(
@@ -93,12 +95,19 @@ def login_user(
         )
 
     token = create_access_token(
-        {
-            "sub": existing_user.email
-        }
-    )
+    {
+        "sub": existing_user.email,
+        "name": existing_user.name
+    }
+)
 
     return {
         "access_token": token,
         "token_type": "bearer"
     }
+
+@router.get("/me")
+def get_me(
+    current_user=Depends(get_current_user)
+):
+    return current_user

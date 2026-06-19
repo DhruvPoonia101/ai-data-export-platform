@@ -15,13 +15,15 @@ def get_user_by_email(
 
 def create_user(
     db: Session,
+    name: str,
     email: str,
     password_hash: str
 ):
     user = User(
-        email=email,
-        password_hash=password_hash
-    )
+    name=name,
+    email=email,
+    password_hash=password_hash
+)
 
     db.add(user)
     db.commit()

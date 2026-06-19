@@ -96,7 +96,11 @@ const router = useRouter();
 
            <button
   onClick={loginUser}
-  className="w-full bg-blue-600 text-white py-3 rounded-xl"
+ className="w-full bg-blue-600 text-white py-3 rounded-xl
+cursor-pointer
+hover:bg-blue-700
+hover:scale-105
+transition-all duration-300"
 >
   Login
 </button>
