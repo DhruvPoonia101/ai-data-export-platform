@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function RegisterPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -34,20 +37,25 @@ export default function RegisterPage() {
 
       if (response.ok) {
 
-        alert("Registration Successful");
+        setMessage("Account Created Successfully! Redirecting...");
 
         router.push("/login");
+        setMessage("Account Created Successfully! Redirecting to Login...");
+
+setTimeout(() => {
+  router.push("/login");
+}, 3000);
 
       } else {
 
-        alert(data.detail);
+        setErrorMessage(data.detail);
 
       }
 
     } catch (error) {
 
       console.error(error);
-      alert("Registration Failed");
+      setErrorMessage("Registration Failed");
 
     }
   };
@@ -72,6 +80,17 @@ export default function RegisterPage() {
           <h2 className="text-2xl font-semibold text-white mb-6">
             Register
           </h2>
+          {message && (
+  <div className="mb-4 p-3 rounded-xl bg-green-500/20 border border-green-500 text-green-300">
+    {message}
+  </div>
+)}
+
+{errorMessage && (
+  <div className="mb-4 p-3 rounded-xl bg-red-500/20 border border-red-500 text-red-300">
+    {errorMessage}
+  </div>
+)}
 
           <div className="space-y-4">
 
@@ -109,7 +128,16 @@ transition-all duration-300"
             >
               Create Account
             </button>
+        <p className="text-slate-400 text-center mt-6">
+  Already have an account?
 
+  <Link
+    href="/login"
+    className="text-green-400 ml-1 hover:text-green-300"
+  >
+    Login
+  </Link>
+</p>
           </div>
 
         </div>

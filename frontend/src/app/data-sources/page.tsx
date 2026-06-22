@@ -11,6 +11,7 @@ export default function DataSourcesPage() {
   const [username, setUsername] = useState("");
 
   const [sources, setSources] = useState<any[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   const loadSources = async () => {
     try {
@@ -70,6 +71,109 @@ export default function DataSourcesPage() {
       console.error(error);
     }
   };
+  const deleteSource = async (id: number) => {
+  try {
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/data-sources/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+
+      alert(data.message);
+
+      loadSources();
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+};
+
+const testSource = async (id: number) => {
+  try {
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/data-sources/${id}/test`,
+      {
+        method: "POST",
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      alert("✅ Connection Successful");
+
+    } else {
+
+      alert("❌ Connection Failed");
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("❌ Connection Failed");
+
+  }
+};
+
+const updateSource = async () => {
+
+  try {
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/data-sources/${editingId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          source_type: sourceType,
+          host,
+          database_name: databaseName,
+          username,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+
+      alert("Data Source Updated");
+
+      setEditingId(null);
+
+      setName("");
+      setSourceType("");
+      setHost("");
+      setDatabaseName("");
+      setUsername("");
+
+      loadSources();
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+};
 
  return (
   <div className="min-h-screen bg-slate-950 text-white flex">
@@ -121,12 +225,28 @@ export default function DataSourcesPage() {
           className="w-full p-3 rounded bg-slate-800"
         />
 
-        <button
-          onClick={addSource}
-          className="bg-green-600 px-6 py-3 rounded-xl hover:bg-green-700 hover:scale-105 transition-all duration-300 cursor-pointer"
-        >
-          Add Data Source
-        </button>
+       <button
+  onClick={
+    editingId
+      ? updateSource
+      : addSource
+  }
+  className="
+    bg-green-600
+    px-6
+    py-3
+    rounded-xl
+    hover:bg-green-700
+    hover:scale-105
+    transition-all
+    duration-300
+    cursor-pointer
+  "
+>
+  {editingId
+    ? "Update Data Source"
+    : "Add Data Source"}
+</button>
 
       </div>
 
@@ -148,6 +268,7 @@ export default function DataSourcesPage() {
                 <th className="p-3 border border-slate-700">Host</th>
                 <th className="p-3 border border-slate-700">Database</th>
                 <th className="p-3 border border-slate-700">Username</th>
+                <th className="p-3 border border-slate-700">Actions</th>
               </tr>
             </thead>
 
@@ -180,6 +301,68 @@ export default function DataSourcesPage() {
                   <td className="p-3 border border-slate-700">
                     {source.username}
                   </td>
+                  <td className="p-3 border border-slate-700">
+
+  <div className="flex gap-2 justify-center">
+
+
+    <button
+  onClick={() => testSource(source.id)}
+  className="
+    bg-blue-600
+    px-3
+    py-1
+    rounded-lg
+    hover:bg-blue-700
+    cursor-pointer
+    transition-all
+  "
+>
+  Test
+</button>
+    <button
+      onClick={() => {
+
+        setEditingId(source.id);
+
+        setName(source.name);
+        setSourceType(source.source_type);
+        setHost(source.host);
+        setDatabaseName(source.database_name);
+        setUsername(source.username);
+
+      }}
+      className="
+        bg-yellow-600
+        px-3
+        py-1
+        rounded-lg
+        hover:bg-yellow-700
+        cursor-pointer
+        transition-all
+      "
+    >
+      Edit
+    </button>
+
+    <button
+      onClick={() => deleteSource(source.id)}
+      className="
+        bg-red-600
+        px-3
+        py-1
+        rounded-lg
+        hover:bg-red-700
+        cursor-pointer
+        transition-all
+      "
+    >
+      Delete
+    </button>
+
+  </div>
+
+</td>
                 </tr>
               ))}
             </tbody>

@@ -35,6 +35,13 @@ export default function Sidebar() {
         </Link>
 
         <Link
+  href="/query-generator"
+  className="block hover:text-white hover:translate-x-2 transition-all duration-300"
+>
+  🤖 Query Generator
+</Link>
+
+        <Link
           href="/exports"
           className="block hover:text-white hover:translate-x-2 transition-all duration-300"
         >
