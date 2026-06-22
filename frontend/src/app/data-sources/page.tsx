@@ -9,7 +9,8 @@ export default function DataSourcesPage() {
   const [host, setHost] = useState("");
   const [databaseName, setDatabaseName] = useState("");
   const [username, setUsername] = useState("");
-
+  const [port, setPort] = useState("");
+  const [password, setPassword] = useState("");
   const [sources, setSources] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -44,8 +45,10 @@ export default function DataSourcesPage() {
             name,
             source_type: sourceType,
             host,
+            port: Number(port),
             database_name: databaseName,
-            username,
+            username,   
+            password,
           }),
         }
       );
@@ -58,8 +61,10 @@ export default function DataSourcesPage() {
         setName("");
         setSourceType("");
         setHost("");
+        setPort("");
         setDatabaseName("");
         setUsername("");
+        setPassword("");
 
         loadSources();
 
@@ -144,8 +149,10 @@ const updateSource = async () => {
           name,
           source_type: sourceType,
           host,
+          port: Number(port),
           database_name: databaseName,
           username,
+          password,
         }),
       }
     );
@@ -161,8 +168,10 @@ const updateSource = async () => {
       setName("");
       setSourceType("");
       setHost("");
+      setPassword("");
       setDatabaseName("");
       setUsername("");
+      setPassword("");
 
       loadSources();
 
@@ -212,6 +221,13 @@ const updateSource = async () => {
         />
 
         <input
+  placeholder="Port"
+  value={port}
+  onChange={(e) => setPort(e.target.value)}
+  className="w-full p-3 rounded bg-slate-800"
+/>
+
+        <input
           placeholder="Database Name"
           value={databaseName}
           onChange={(e) => setDatabaseName(e.target.value)}
@@ -224,6 +240,14 @@ const updateSource = async () => {
           onChange={(e) => setUsername(e.target.value)}
           className="w-full p-3 rounded bg-slate-800"
         />
+
+        <input
+  type="password"
+  placeholder="Password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  className="w-full p-3 rounded bg-slate-800"
+/>
 
        <button
   onClick={
@@ -266,6 +290,7 @@ const updateSource = async () => {
                 <th className="p-3 border border-slate-700">Name</th>
                 <th className="p-3 border border-slate-700">Type</th>
                 <th className="p-3 border border-slate-700">Host</th>
+                <th className="p-3 border border-slate-700">Port</th>
                 <th className="p-3 border border-slate-700">Database</th>
                 <th className="p-3 border border-slate-700">Username</th>
                 <th className="p-3 border border-slate-700">Actions</th>
@@ -292,6 +317,10 @@ const updateSource = async () => {
 
                   <td className="p-3 border border-slate-700">
                     {source.host}
+                  </td>
+
+                  <td className="p-3 border border-slate-700">
+                    {source.port}
                   </td>
 
                   <td className="p-3 border border-slate-700">
@@ -324,12 +353,15 @@ const updateSource = async () => {
       onClick={() => {
 
         setEditingId(source.id);
-
+        setPort(String(source.port));
+        setPassword(source.password);
         setName(source.name);
         setSourceType(source.source_type);
         setHost(source.host);
+        setPort(String(source.port));
         setDatabaseName(source.database_name);
         setUsername(source.username);
+        setPassword(source.password);
 
       }}
       className="

@@ -153,27 +153,82 @@ export default function QueryGeneratorPage() {
         )}
 
         {results.length > 0 && (
-          <div className="mt-8">
 
-            <h2 className="text-xl font-bold mb-4">
-              Query Results
-            </h2>
+  <div className="mt-8">
 
-            <pre
-              className="
-                bg-slate-900
-                p-6
-                rounded-xl
-                border
-                border-slate-800
-                overflow-auto
-              "
-            >
-              {JSON.stringify(results, null, 2)}
-            </pre>
+    <h2 className="text-xl font-bold mb-4">
+      Query Results
+    </h2>
 
-          </div>
-        )}
+    <div className="overflow-x-auto">
+
+      <table className="w-full border border-slate-700 rounded-xl overflow-hidden">
+
+        <thead>
+
+          <tr className="bg-slate-800">
+
+            {Object.keys(results[0])
+              .filter(
+                (key) => key !== "password_hash"
+              )
+              .map((key) => (
+
+                <th
+                  key={key}
+                  className="p-3 border border-slate-700 capitalize"
+                >
+                  {key}
+                </th>
+
+              ))}
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {results.map(
+            (row, index) => (
+
+              <tr
+                key={index}
+                className="text-center hover:bg-slate-800 transition-all"
+              >
+
+                {Object.entries(row)
+                  .filter(
+                    ([key]) =>
+                      key !== "password_hash"
+                  )
+                  .map(
+                    ([key, value]) => (
+
+                      <td
+                        key={key}
+                        className="p-3 border border-slate-700"
+                      >
+                        {String(value)}
+                      </td>
+
+                    )
+                  )}
+
+              </tr>
+
+            )
+          )}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+)}
       </main>
     </div>
   );

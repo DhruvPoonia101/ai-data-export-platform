@@ -101,10 +101,12 @@ def test_source_connection(
         }
 
     success = test_connection(
-        source.host,
-        source.database_name,
-        source.username
-    )
+    source.host,
+    source.port,
+    source.database_name,
+    source.username,
+    source.password
+)
 
     if success:
         return {
