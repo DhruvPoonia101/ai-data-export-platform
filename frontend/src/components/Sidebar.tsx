@@ -40,6 +40,14 @@ export default function Sidebar() {
 >
   🤖 Query Generator
 </Link>
+<Link
+  href="/schema-explorer"
+  className="block hover:text-white hover:translate-x-2 transition-all duration-300"
+>
+  🗂️ Schema Explorer
+</Link>
+
+
 
         <Link
           href="/exports"
