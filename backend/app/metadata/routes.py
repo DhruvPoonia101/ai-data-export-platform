@@ -6,6 +6,10 @@ from app.metadata.repository import (
     get_database_metadata
 )
 
+from app.metadata.storage import (
+    extract_and_store_metadata
+)
+
 router = APIRouter(
     prefix="/metadata",
     tags=["Metadata"]
@@ -16,4 +20,10 @@ router = APIRouter(
 def get_metadata(
     db: Session = Depends(get_db)
 ):
-    return get_database_metadata(db)
+    return get_database_metadata(db)    
+
+@router.post("/extract")
+def extract_metadata(
+    db: Session = Depends(get_db)
+):
+    return extract_and_store_metadata(db)
