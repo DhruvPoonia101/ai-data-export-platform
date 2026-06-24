@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.ai.routes import router as ai_router
 
 from app.auth.routes import router as auth_router
 from app.data_sources.routes import (
@@ -35,6 +36,7 @@ app.include_router(query_generator_router)
 app.include_router(
     metadata_router
 )
+app.include_router(ai_router)
 
 @app.get("/")
 def root():
