@@ -15,4 +15,4 @@ def ask_ai(prompt: str):
         prompt
     )
 
-    return response.text
+    return response.text.strip()
