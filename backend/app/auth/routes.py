@@ -20,6 +20,7 @@ from app.core.security import (
 )
 
 from app.core.jwt_handler import create_access_token
+from app.core.audit_logger import log_event
 
 router = APIRouter(
     prefix="/auth",
@@ -100,6 +101,10 @@ def login_user(
         "name": existing_user.name
     }
 )
+    log_event(
+    db,
+    "LOGIN"
+)
 
     return {
         "access_token": token,
@@ -111,3 +116,17 @@ def get_me(
     current_user=Depends(get_current_user)
 ):
     return current_user
+
+@router.post("/logout")
+def logout_user(
+    db: Session = Depends(get_db)
+):
+
+    log_event(
+        db,
+        "LOGOUT"
+    )
+
+    return {
+        "message": "Logged out successfully"
+    }

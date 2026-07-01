@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.source import DataSource
+from app.core.audit_logger import log_event
 import psycopg2
 
 
@@ -20,6 +21,11 @@ def create_data_source(
     db.add(new_source)
     db.commit()
     db.refresh(new_source)
+
+    log_event(
+    db,
+    "CREATE_CONNECTION"
+)
 
     return new_source
 

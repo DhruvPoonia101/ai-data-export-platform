@@ -10,6 +10,7 @@ import os
 from app.database.connection import get_db
 from app.models.source import DataSource
 from app.query_generator.connection import build_connection_string
+from app.core.audit_logger import log_event
 
 router = APIRouter(
     prefix="/exports",
@@ -58,15 +59,20 @@ def export_csv(
     filename = f"exports/{uuid.uuid4()}.csv"
 
     dataframe.to_csv(
-        filename,
-        index=False
-    )
+    filename,
+    index=False
+)
+
+    log_event(
+    db,
+    "EXPORT_CSV"
+)
 
     return FileResponse(
-        path=filename,
-        filename="query_results.csv",
-        media_type="text/csv"
-    )
+    path=filename,
+    filename="query_results.csv",
+    media_type="text/csv"
+)
 
 @router.post("/excel")
 def export_excel(
@@ -109,12 +115,17 @@ def export_excel(
     filename = f"exports/{uuid.uuid4()}.xlsx"
 
     dataframe.to_excel(
-        filename,
-        index=False
-    )
+    filename,
+    index=False
+)
+
+    log_event(
+        db,
+        "EXPORT_EXCEL"
+)
 
     return FileResponse(
-        path=filename,
-        filename="query_results.xlsx",
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    path=filename,
+    filename="query_results.xlsx",
+    media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)

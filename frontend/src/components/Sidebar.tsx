@@ -6,10 +6,28 @@ import { useRouter } from "next/navigation";
 export default function Sidebar() {
   const router = useRouter();
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
-  };
+  const logout = async () => {
+
+  try {
+
+    await fetch(
+      "http://127.0.0.1:8000/auth/logout",
+      {
+        method: "POST",
+      }
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+  localStorage.removeItem("token");
+
+  router.push("/login");
+
+};
 
   return (
     <aside className="w-64 bg-slate-900 min-h-screen p-6 flex flex-col">
@@ -49,12 +67,14 @@ export default function Sidebar() {
 
 
 
+       
+
         <Link
-          href="/exports"
-          className="block hover:text-white hover:translate-x-2 transition-all duration-300"
-        >
-          📦 Exports
-        </Link>
+  href="/history"
+  className="block hover:text-white hover:translate-x-2 transition-all duration-300"
+>
+  🕒 Query History
+</Link>
 
         <Link
           href="/settings"

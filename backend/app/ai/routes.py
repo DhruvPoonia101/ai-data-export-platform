@@ -10,6 +10,8 @@ from app.query_generator.connection import build_connection_string
 
 from app.database.connection import get_db
 from app.models.source import DataSource
+from app.models.query_history import QueryHistory
+from app.core.audit_logger import log_event
 
 router = APIRouter(
     prefix="/ai",
@@ -102,6 +104,19 @@ def generate_sql(
         page=request.page,
         page_size=request.page_size
     )
+
+    history = QueryHistory(
+        question=request.question,
+        generated_sql=sql
+        )
+    db.add(history)
+    db.commit()
+
+    log_event(
+    db,
+    "EXECUTE_QUERY"
+)
+
 
     return {
         "success": True,
