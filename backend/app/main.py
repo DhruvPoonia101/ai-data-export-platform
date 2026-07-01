@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.ai.routes import router as ai_router
-
+from app.exports.routes import router as exports_router
 from app.auth.routes import router as auth_router
 from app.data_sources.routes import (
     router as data_source_router
@@ -33,10 +33,9 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(data_source_router)
 # app.include_router(query_generator_router)
-app.include_router(
-    metadata_router
-)
+app.include_router(metadata_router)
 app.include_router(ai_router)
+app.include_router(exports_router)
 
 @app.get("/")
 def root():

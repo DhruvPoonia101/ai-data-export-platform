@@ -67,6 +67,94 @@ const [loading, setLoading] = useState(false);
   }
 };
 
+const exportCSV = async () => {
+
+  try {
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/exports/csv",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+  sql: generatedSql,
+}),
+      }
+    );
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "query_results.csv";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
+
+const exportExcel = async () => {
+
+  try {
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/exports/excel",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          sql: generatedSql,
+        }),
+      }
+    );
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "query_results.xlsx";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
+
   useEffect(() => {
 
   if (!generatedSql) return;
@@ -249,15 +337,50 @@ const [loading, setLoading] = useState(false);
     Next
   </button>
 
-</div>
+  </div>
+  <div className="mt-6 flex gap-4">
 
-    </div>
+  <button
+    onClick={exportCSV}
+    className="
+      bg-green-600
+      hover:bg-green-700
+      px-6
+      py-3
+      rounded-xl
+      transition-all
+      duration-300
+      cursor-pointer
+    "
+  >
+    Export CSV
+  </button>
+
+  <button
+    onClick={exportExcel}
+    className="
+      bg-blue-600
+      hover:bg-blue-700
+      px-6
+      py-3
+      rounded-xl
+      transition-all
+      duration-300
+      cursor-pointer
+    "
+  >
+    Export Excel
+  </button>
+
+</div>
 
   </div>
 
-  
+  </div>
 
-)}      </main>
+)}
+
+    </main>
     </div>
   );
 }
