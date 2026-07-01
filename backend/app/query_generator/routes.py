@@ -1,8 +1,6 @@
 from fastapi import APIRouter
 
-from app.query_generator.executor import (
-    execute_sql_query
-)
+from app.query_generator.executor import execute_sql
 
 from app.schemas.query import QueryRequest
 

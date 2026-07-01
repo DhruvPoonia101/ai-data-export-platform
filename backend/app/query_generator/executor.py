@@ -1,25 +1,51 @@
-from sqlalchemy import text
-from app.database.session import SessionLocal
+from sqlalchemy import create_engine, text
 
 
-def execute_sql_query(sql: str):
+def execute_sql(
+    connection_string: str,
+    sql: str,
+    page: int = 1,
+    page_size: int = 10
+):
+    sql = sql.strip().rstrip(";")
 
-    db = SessionLocal()
+    engine = create_engine(connection_string)
 
-    try:
+    offset = (page - 1) * page_size
 
-        result = db.execute(text(sql))
+    paginated_sql = f"""
+    {sql}
+    LIMIT {page_size}
+    OFFSET {offset}
+    """
+
+    count_sql = f"""
+    SELECT COUNT(*) FROM (
+        {sql}
+    ) AS total_rows
+    """
+
+    with engine.connect() as conn:
+
+        total_rows = conn.execute(
+            text(count_sql)
+        ).scalar()
+
+        result = conn.execute(
+            text(paginated_sql)
+        )
 
         rows = result.fetchall()
 
-        data = []
+        columns = result.keys()
 
-        for row in rows:
-            data.append(
-                dict(row._mapping)
-            )
-
-        return data
-
-    finally:
-        db.close()
+    return {
+        "columns": list(columns),
+        "rows": [list(row) for row in rows],
+        "total_rows": total_rows,
+        "page": page,
+        "page_size": page_size,
+        "total_pages": (
+            total_rows + page_size - 1
+        ) // page_size
+    }
